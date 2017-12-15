@@ -9,7 +9,8 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  Image
 } from 'react-native';
 
 const instructions = Platform.select({
@@ -22,6 +23,9 @@ export default class App extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.head}>
+          <Image style={styles.headImg} source={require('./images/head.png')} />
+        </View>
         <Text style={styles.welcome}>
           Welcome to React Native!
         </Text>
@@ -38,10 +42,20 @@ export default class App extends Component<{}> {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    // flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // backgroundColor: '#F5FCFF',
+  },
+  head: {
+    height: 205,
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#1989fa'
+  },
+  headImg: {
+    width: 65,
+    height: 65,
+    borderRadius: 32.5
   },
   welcome: {
     fontSize: 20,
