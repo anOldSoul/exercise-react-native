@@ -10,7 +10,9 @@ import {
   StyleSheet,
   Text,
   View,
-  Image
+  Image,
+  TouchableOpacity,
+  ListView
 } from 'react-native';
 
 const instructions = Platform.select({
@@ -20,7 +22,47 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 export default class App extends Component<{}> {
+  constructor(props) {
+    super(props);
+    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      currentIndex: 2,
+      show: true,
+      dataSource: ds.cloneWithRows([
+        {name: '健康信息',index: 0},
+        {name: '用药信息',index: 1},
+        {name: '体检信息',index: 2},
+        {name: '健康报告',index: 3}])
+    };
+    this._onPressButton = this._onPressButton.bind(this);
+  }
+  _onPressButton() {
+    console.log("You tapped the button!");
+    this.setState((previousState) => {
+        return ({
+            show: !previousState.show,
+            currentIndex: 1
+        })
+    });
+
+  }
+  renderRow(rowData) {
+    let a = 0
+    return  <View>
+              <TouchableOpacity onPress={() => {
+                a = rowData.index
+                console.log(a);
+              }}>
+                <View style={styles.instructions}>
+                  <Text>{rowData.name}</Text>
+                  <Image style={styles.arrowImg} source={require('./images/ic_up.png')} />
+                </View>
+              </TouchableOpacity>
+              <Text>{a}</Text>
+            </View>
+  }
   render() {
+    // let v = this.state.show ? <Text>待显示的内容</Text> : null;
     return (
       <View style={styles.container}>
         <View style={styles.head}>
@@ -29,26 +71,9 @@ export default class App extends Component<{}> {
           <Text style={styles.title}>为定制专属您的健康管理，请完善信息</Text>
           <Text style={styles.progress}></Text>
         </View>
-        <View style={styles.instructions}>
-          <Text>基本信息</Text>
-          <Image style={styles.arrowImg} source={require('./images/ic_up.png')} />
-        </View>
-        <View style={styles.instructions}>
-          <Text>健康信息</Text>
-          <Image style={styles.arrowImg} source={require('./images/ic_up.png')} />
-        </View>
-        <View style={styles.instructions}>
-          <Text>用药信息</Text>
-          <Image style={styles.arrowImg} source={require('./images/ic_up.png')} />
-        </View>
-        <View style={styles.instructions}>
-          <Text>体检信息</Text>
-          <Image style={styles.arrowImg} source={require('./images/ic_up.png')} />
-        </View>
-        <View style={styles.instructions}>
-          <Text>健康报告</Text>
-          <Image style={styles.arrowImg} source={require('./images/ic_up.png')} />
-        </View>
+        <ListView  
+          dataSource={this.state.dataSource}
+          renderRow={(rowData) => this.renderRow(rowData)}  />
       </View>
     );
   }
