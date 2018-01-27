@@ -5,15 +5,24 @@
  */
 
 import React, { Component } from 'react';
+import Routes from './routesConfig.js';
 import {
   Platform,
+  Picker,
   StyleSheet,
   Text,
   View,
+  ScrollView,
   Image,
   TouchableOpacity,
+  TextInput,
   ListView
 } from 'react-native';
+let list = ['基本信息', '健康信息', '用药信息', '体检信息'];
+let list1 = ['性别', '年龄', '体重（公斤）', '身高（厘米）'];
+let list2 = ['submenu1', 'submenu2', 'submenu3'];
+let list3 = ['hhahh', 'yyyyy', 'iiiiiii'];
+let list4 = ['aaaaa', 'bbbb', 'ccccc'];
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -24,41 +33,99 @@ const instructions = Platform.select({
 export default class App extends Component<{}> {
   constructor(props) {
     super(props);
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      currentIndex: 2,
-      show: true,
-      dataSource: ds.cloneWithRows([
-        {name: '健康信息',index: 0},
-        {name: '用药信息',index: 1},
-        {name: '体检信息',index: 2},
-        {name: '健康报告',index: 3}])
+      language: '',
+      text: '',
+      listExpand:[false,false,false,false],//true表示有数据更新 
     };
-    this._onPressButton = this._onPressButton.bind(this);
   }
-  _onPressButton() {
-    console.log("You tapped the button!");
-    this.setState((previousState) => {
-        return ({
-            show: !previousState.show,
-            currentIndex: 1
-        })
-    });
-
+  renderMenuList(list) { 
+    return list.map((item, i) => this.renderItem(item, i)); 
+  }
+  onPressItem(i){ 
+    let l=this.state.listExpand; 
+    l[i]=!l[i]; 
+    this.setState({listExpand:l}); 
+  }
+  renderItem(item, i) {
+    return (
+      <View key={i}> 
+      <TouchableOpacity 
+                activeOpacity={0.75} 
+                onPress={this.onPressItem.bind(this,i) }               
+      > 
+      <View style={styles.itemContainer} > 
+        <Text>{item}</Text>        
+      </View> 
+      </TouchableOpacity> 
+      {this.state.listExpand[i]?this.renderSubMenuList(list2, i):null} 
+      </View> 
+      
+    ); 
+  }
+  renderSubMenuList(list2, index) {
+    if (index == 0) {
+      return list1.map((item, i) => this.rederBasic(item, i));
+    } else if (index == 1) {
+      return list2.map((item, i) => this.renderSubItem(item, i));
+    } else if (index == 2) {
+      return list3.map((item, i) => this.renderSubItem(item, i));
+    } else {
+      return list4.map((item, i) => this.renderSubItem(item, i));
+    }
+  }
+  rederBasic(item, i) {
+    if (i == 0) {
+      return (
+        <View style={styles.itemContainer} key={i}> 
+          <Text>{item}</Text>
+          <Picker
+            style={{width: '50%'}}
+            selectedValue={this.state.language}
+            onValueChange={(lang) => this.setState({language: lang})}>
+            <Picker.Item label="男" value="male" />
+            <Picker.Item label="女" value="female" />
+          </Picker>
+        </View>
+        );
+    } else {     
+      return (
+        <View style={styles.itemContainer} key={i}> 
+          <Text>{item}</Text>
+          <TextInput
+            style={{width: 100}}
+            placeholder="Type here to translate!"
+            onChangeText={(text) => this.setState({text})}
+          />
+        </View> 
+        );
+    }
+  }
+  goDetail() {
+    console.log('detail===========')
+  }
+  renderSubItem(item, i) { 
+    // console.log(i)
+    return (
+      <View style={styles.itemContainer} key={i}> 
+        <Text onPress={() => {
+                console.log(i);
+              }}>{item}</Text>
+      </View> 
+    ); 
   }
   renderRow(rowData) {
     let a = 0
     return  <View>
               <TouchableOpacity onPress={() => {
                 a = rowData.index
-                console.log(a);
               }}>
                 <View style={styles.instructions}>
                   <Text>{rowData.name}</Text>
                   <Image style={styles.arrowImg} source={require('./images/ic_up.png')} />
                 </View>
+                <Text>{rowData.detail[0].name}</Text>
               </TouchableOpacity>
-              <Text>{a}</Text>
             </View>
   }
   render() {
@@ -71,15 +138,28 @@ export default class App extends Component<{}> {
           <Text style={styles.title}>为定制专属您的健康管理，请完善信息</Text>
           <Text style={styles.progress}></Text>
         </View>
-        <ListView  
-          dataSource={this.state.dataSource}
-          renderRow={(rowData) => this.renderRow(rowData)}  />
+        <ScrollView contentContainerStyle={styles.contentContainer}> 
+          {this.renderMenuList(list)} 
+        </ScrollView> 
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  contentContainer: {
+    paddingBottom: 20, 
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 45,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderBottomColor: '#d2d3d5',
+    borderBottomWidth: 0.5,
+    justifyContent: 'space-between'
+  },
   container: {
     // flex: 1,
     // justifyContent: 'center',
