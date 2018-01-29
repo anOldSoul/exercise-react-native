@@ -10,6 +10,7 @@ import {
     TabNavigator
 } from 'react-navigation';
 import Detail from './views/detail';
+import HealthyDocument from './views/healthyDocument';
 import {
   Platform,
   Picker,
@@ -35,7 +36,10 @@ const instructions = Platform.select({
   android: 'uuuuto reload,\n' +
     'Shake or press menu button for dev menu',
 });
-export default class App extends Component<{}> {
+class App extends Component<{}> {
+  static navigationOptions = {
+    title: 'Welcome',
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -106,13 +110,12 @@ export default class App extends Component<{}> {
         );
     }
   }
-  goDetail() {
-    console.log('detail===========')
-  }
   renderSubItem(item, i) {
+    const { navigate } = this.props.navigation;
     return (
       <View style={styles.itemContainer} key={i}> 
-        <Text>{item}</Text>
+        <Text onPress={() => navigate('Chat',{ user: 'Lucy' })}
+              title="Chat with Lucy">{item}</Text>
       </View> 
     ); 
   }
@@ -131,7 +134,6 @@ export default class App extends Component<{}> {
             </View>
   }
   render() {
-    // let v = this.state.show ? <Text>待显示的内容</Text> : null;
     return (
       <View style={styles.container}>
         <View style={styles.head}>
@@ -148,18 +150,17 @@ export default class App extends Component<{}> {
   }
 }
 
-const test = StackNavigator({
-    PlanDetail: {
-        screen: Detail,
-        navigationOptions: {
-            header: {
-                style: {
-                    backgroundColor: '#fff'
-                }
-            }
-        }
+const SimpleApp = StackNavigator({
+    Home: {
+        screen: App
+    },
+    Chat:{
+        screen:Detail
     }
+
 });
+
+module.exports = SimpleApp;
 
 const styles = StyleSheet.create({
   contentContainer: {
