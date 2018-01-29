@@ -5,7 +5,11 @@
  */
 
 import React, { Component } from 'react';
-import Routes from './routesConfig.js';
+import {
+    StackNavigator,
+    TabNavigator
+} from 'react-navigation';
+import Detail from './views/detail';
 import {
   Platform,
   Picker,
@@ -23,6 +27,7 @@ let list1 = ['性别', '年龄', '体重（公斤）', '身高（厘米）'];
 let list2 = ['submenu1', 'submenu2', 'submenu3'];
 let list3 = ['hhahh', 'yyyyy', 'iiiiiii'];
 let list4 = ['aaaaa', 'bbbb', 'ccccc'];
+// const {navigate} = this.props.navigation;
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -104,13 +109,10 @@ export default class App extends Component<{}> {
   goDetail() {
     console.log('detail===========')
   }
-  renderSubItem(item, i) { 
-    // console.log(i)
+  renderSubItem(item, i) {
     return (
       <View style={styles.itemContainer} key={i}> 
-        <Text onPress={() => {
-                console.log(i);
-              }}>{item}</Text>
+        <Text>{item}</Text>
       </View> 
     ); 
   }
@@ -145,6 +147,19 @@ export default class App extends Component<{}> {
     );
   }
 }
+
+const test = StackNavigator({
+    PlanDetail: {
+        screen: Detail,
+        navigationOptions: {
+            header: {
+                style: {
+                    backgroundColor: '#fff'
+                }
+            }
+        }
+    }
+});
 
 const styles = StyleSheet.create({
   contentContainer: {

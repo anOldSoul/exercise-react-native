@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Routes from './routesConfig.js';
 import {
   Platform,
   Picker,
