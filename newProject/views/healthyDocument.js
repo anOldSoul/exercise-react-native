@@ -27,7 +27,8 @@ export default class healthyDocument extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      language: '',
+      birth: '',
+      language: 'hhahah',
       date: new Date(),
       timeZoneOffsetInHours: (-1) * (new Date()).getTimezoneOffset() / 60,
       text: '',
@@ -35,7 +36,6 @@ export default class healthyDocument extends React.Component {
     };
   }
   renderMenuList(list) {
-    console.log(Platform)
     let param = {
       mStId: undefined,
       uNm: undefined,
@@ -49,7 +49,7 @@ export default class healthyDocument extends React.Component {
     }
     let url = 'https://platform.carelinker.com/clApi/entry';
     NetUitl.post(url, param, result => {
-      console.log(result)
+      // console.log(result)
     })
     return list.map((item, i) => this.renderItem(item, i)); 
   }
@@ -98,6 +98,7 @@ export default class healthyDocument extends React.Component {
       });
       if (action !== DatePickerAndroid.dismissedAction) {
         // 这里开始可以处理用户选好的年月日三个参数：year, month (0-11), day
+        this.setState({birth: `${this.state.date.getFullYear() - year}岁/${year}-${month}-${day}`});
       }
     } catch ({code, message}) {
       console.warn('Cannot open date picker', message);
@@ -109,7 +110,7 @@ export default class healthyDocument extends React.Component {
         <View style={styles.itemContainer} key={i}> 
           <Text>{item}</Text>
           <Picker
-            style={{width: '50%'}}
+            style={{width: 55}}
             selectedValue={this.state.language}
             onValueChange={(lang) => this.setState({language: lang})}>
             <Picker.Item label="男" value="male" />
@@ -122,6 +123,7 @@ export default class healthyDocument extends React.Component {
         return (
           <View style={styles.itemContainer} key={i}>
             <Text  onPress={this.onPressPicker.bind(this)}>{item}</Text>
+            <Text>{this.state.birth}</Text>
           </View>
           );
       } else {
@@ -142,8 +144,7 @@ export default class healthyDocument extends React.Component {
         <View style={styles.itemContainer} key={i}> 
           <Text>{item}</Text>
           <TextInput
-            style={{width: 100}}
-            placeholder="Type here to translate!"
+            style={{}}
             onChangeText={(text) => this.setState({text})}
           />
         </View> 
